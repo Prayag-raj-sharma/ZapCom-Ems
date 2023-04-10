@@ -135,6 +135,8 @@ import com.ems.ems.project.model.EmployeePage;
 import com.ems.ems.project.service.EmployeeService;
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 import javax.ws.rs.BeanParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,7 +147,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/employees")
+@RequestMapping("api/employees")  // root
 public class EmployeeController {
 
     private final EmployeeService service;
@@ -154,32 +156,55 @@ public class EmployeeController {
     public EmployeeController(EmployeeService service) {
         this.service = service;
     }
-
+    
+    
+    // It is using the EmployeePage class to display the employees in pages.
     @GetMapping
     public Page<Employee> getAllEmployees(@BeanParam EmployeePage page) {
         Pageable pageable = page.toPageable();
         return service.getAllEmployees(pageable);
     }
-
+    
+    // It will take the Employee Details to save in the database.
     @PostMapping
     public ResponseEntity<Employee> saveEmployee(@RequestBody Employee employee) {
         return new ResponseEntity<>(service.saveEmployee(employee), HttpStatus.CREATED);
     }
-
-    @GetMapping("/{id}")
+    
+    // To get the details of the particular employee by the help of employeeId.
+    @GetMapping("/id/{id}")
     public ResponseEntity<Employee> getEmployeeById(@Valid @PathVariable("id") long employeeId) {
         return new ResponseEntity<>(service.getEmployeeById(employeeId), HttpStatus.OK);
     }
-
+    
+    // To get the details of the particular employee by the help of first name.
+    @GetMapping("/fn/{firstName}")
+    public ResponseEntity<Employee> getEmployeeByFirstName(@Valid @PathVariable("firstName") String firstName) {
+        return new ResponseEntity<>(service.getEmployeeByFirstName(firstName), HttpStatus.OK);
+    }
+    
+    // To get the details of the particular employee by the help of last name.
+    @GetMapping("/ln/{lastName}")
+    public ResponseEntity<Employee> getEmployeeByLastName(@Valid @PathVariable("lastName") String lastName) {
+        return new ResponseEntity<>(service.getEmployeeByLastName(lastName), HttpStatus.OK);
+    }
+    
+    // To update the values of the particular employee by the help of the id.
     @PutMapping("/{id}")
     public ResponseEntity<Employee> updateEmployee(@Valid @PathVariable("id") long id, @RequestBody Employee employee) {
         return new ResponseEntity<>(service.updateEmployee(employee, id), HttpStatus.OK);
     }
-
+    
+    // To delete the details of the particular employee by the help of id.
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteEmployee(@Valid @PathVariable("id") long id) {
         service.deleteEmployee(id);
         return new ResponseEntity<>("Employee Deleted", HttpStatus.OK);
+    }
+    
+    @GetMapping("list/{firstName}")
+    public ResponseEntity<List<Employee>> getAllEmployeeByFirstName(@PathVariable("firstName") String firstName) {
+    	return new ResponseEntity<>(service.getAllEmployeeByFirstName(firstName), HttpStatus.OK);
     }
 
 }

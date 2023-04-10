@@ -20,6 +20,12 @@ public interface EmployeeService {
 	//List<Employee> getAllEmployee(EmployeePage page);
 	Page<Employee> getAllEmployees(Pageable pageable);
 	
+	Employee getEmployeeByFirstName(String firstName);
+	
+	Employee getEmployeeByLastName(String lastName);
+	
+	List<Employee> getAllEmployeeByFirstName(String firstName);
+	
     
 	
 

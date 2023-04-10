@@ -31,7 +31,6 @@ public class EmployeeServiceImpl implements EmployeeService{
 	
 	ErrorDetails ed = new ErrorDetails();
 	
-	//@Autowired
 	public EmployeeServiceImpl(EmployeeRepo repo) {
 		super();
 		this.repo = repo;
@@ -52,38 +51,16 @@ public class EmployeeServiceImpl implements EmployeeService{
 	public Page<Employee> getAllEmployees(Pageable pageable) {
         return repo.findAll(pageable);
 	}
-
-	/*@Override
-	public List<Employee> getAllEmployee(EmployeePage page) {
-		 
-		
-		int pageSize = page.getPageSize();
-		int pageNo = page.getPageNumber();
-		int offset = (pageNo - 1) * pageSize;
-		
-		String sql = "SELECT * FROM employees ORDER BY" + page.getSortBy() +" " + page.getSortDirection()
-		+ "LIMIT ? OFFSET ?";
-		
-		List<Employee> employee = jdbcTemplate.query(sql,new Object[]{pageSize,offset}, new EmployeeRowMapper());
-		
-		return employee;
+	
+	@Override
+	public Employee getEmployeeByFirstName(String firstName) {
+		return repo.getByfirstName(firstName);
 	}
 	
-	public static final class EmployeeRowMapper implements RowMapper<Employee> {
-    	 @Override
-         public Employee mapRow(ResultSet rs, int rowNum) throws SQLException {
-             Employee employee = new Employee();
-             employee.setId(rs.getLong("id"));
-             employee.setEmailId(rs.getString("e_mail"));
-             employee.setFirstName(rs.getString("first_name"));
-             employee.setLastName(rs.getString("last_name"));
-             return employee;
-         }
-
-    } */
-
-	
-	
+	@Override
+	public Employee getEmployeeByLastName(String lastName) {
+		return repo.getBylastName(lastName);
+	}
 
 	@Override
 	public Employee getEmployeeById(long id) {
@@ -113,4 +90,42 @@ public class EmployeeServiceImpl implements EmployeeService{
 		
 	}
 
+	@Override
+	public List<Employee> getAllEmployeeByFirstName(String firstName) {
+		
+		return repo.getAllEmployeeByFirstName(firstName);
+	}
+
 }
+
+
+
+
+/*@Override
+public List<Employee> getAllEmployee(EmployeePage page) {
+	 
+	
+	int pageSize = page.getPageSize();
+	int pageNo = page.getPageNumber();
+	int offset = (pageNo - 1) * pageSize;
+	
+	String sql = "SELECT * FROM employees ORDER BY" + page.getSortBy() +" " + page.getSortDirection()
+	+ "LIMIT ? OFFSET ?";
+	
+	List<Employee> employee = jdbcTemplate.query(sql,new Object[]{pageSize,offset}, new EmployeeRowMapper());
+	
+	return employee;
+}
+
+public static final class EmployeeRowMapper implements RowMapper<Employee> {
+	 @Override
+     public Employee mapRow(ResultSet rs, int rowNum) throws SQLException {
+         Employee employee = new Employee();
+         employee.setId(rs.getLong("id"));
+         employee.setEmailId(rs.getString("e_mail"));
+         employee.setFirstName(rs.getString("first_name"));
+         employee.setLastName(rs.getString("last_name"));
+         return employee;
+     }
+
+} */

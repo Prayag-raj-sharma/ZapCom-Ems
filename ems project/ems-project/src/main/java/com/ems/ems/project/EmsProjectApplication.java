@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 
 @SpringBootApplication
-//@ComponentScan(basePackages = {"com.ems.ems.project", "com.ems.ems.project.config"})
+@ComponentScan(basePackages = {"com.ems.ems.project", "com.ems.ems.project.config"})
 public class EmsProjectApplication {
 
 	public static void main(String[] args) {

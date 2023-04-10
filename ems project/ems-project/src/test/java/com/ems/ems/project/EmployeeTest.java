@@ -77,36 +77,9 @@ class EmployeeTest {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 package com.ems.ems.project;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -125,6 +98,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -132,15 +106,19 @@ import org.springframework.http.ResponseEntity;
 import com.ems.ems.project.controller.EmployeeController;
 import com.ems.ems.project.model.Employee;
 import com.ems.ems.project.model.EmployeePage;
+import com.ems.ems.project.repo.EmployeeRepo;
 import com.ems.ems.project.service.EmployeeService;
+import com.ems.ems.project.service.impl.EmployeeServiceImpl;
 
 public class EmployeeTest {
 
     @Mock
     private EmployeeService employeeService;
+ 
 
     @InjectMocks
     private EmployeeController employeeController;
+    
 
     @BeforeEach
     void setUp() {
@@ -170,12 +148,14 @@ public class EmployeeTest {
 
         // Verify that the service method was called once with the correct arguments
         verify(employeeService, times(1)).getAllEmployees(PageRequest.of(1, 2, Sort.by("id")));
+        
+       
     }
 
     @Test
     void testSaveEmployee() {
         // Create an employee for testing
-        Employee employee = new Employee(1L, "John", "Doe", "john.doe@example.com");
+        Employee employee = new Employee(1L, "John", "Cena", "john@gmail.com");
 
         // Mock the service method to return the saved employee
         when(employeeService.saveEmployee(employee)).thenReturn(employee);
@@ -192,7 +172,7 @@ public class EmployeeTest {
    
     
     @Test
-    void deleteEmployee_shouldReturnEmployeeDeleted() {
+    void deleteEmployee() {
        
         ResponseEntity<String> response = employeeController.deleteEmployee(1L);
 
@@ -200,6 +180,66 @@ public class EmployeeTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Employee Deleted", response.getBody());
         verify(employeeService, times(1)).deleteEmployee(anyLong());
+    }
+    
+    @Test
+    void getEmployeeById() {
+        
+        Employee employee = new Employee(1L, "John", "Cena", "john@gmail.com");
+        when(employeeService.getEmployeeById(anyLong())).thenReturn(employee);
+
+        
+        ResponseEntity<Employee> response = employeeController.getEmployeeById(1L);
+
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(employee, response.getBody());
+        verify(employeeService, times(1)).getEmployeeById(anyLong());
+    }
+    
+    @Test
+    void getEmployeeByFirstName() {
+        
+        Employee employee = new Employee(1L, "John", "Cena", "john@gmail.com");
+        when(employeeService.getEmployeeByFirstName(any())).thenReturn(employee);
+
+        
+        ResponseEntity<Employee> response = employeeController.getEmployeeByFirstName("John");
+
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(employee, response.getBody());
+        verify(employeeService, times(1)).getEmployeeByFirstName(any());
+    }
+    
+    @Test
+    void getEmployeeByLastName() {
+        
+        Employee employee = new Employee(1L, "John", "Cena", "john@gmail.com");
+        when(employeeService.getEmployeeByLastName(any())).thenReturn(employee);
+
+        
+        ResponseEntity<Employee> response = employeeController.getEmployeeByLastName("Cena");
+
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(employee, response.getBody());
+        verify(employeeService, times(1)).getEmployeeByLastName(any());
+    }
+
+    @Test
+    void updateEmployee() {
+        
+        Employee employee = new Employee(1L, "John", "Cena", "john@gmail.com");
+        when(employeeService.updateEmployee(any(Employee.class), anyLong())).thenReturn(employee);
+
+        
+        ResponseEntity<Employee> response = employeeController.updateEmployee(1L, employee);
+
+        
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(employee, response.getBody());
+        verify(employeeService, times(1)).updateEmployee(any(Employee.class), anyLong());
     }
     
     
